@@ -92,7 +92,7 @@ jobs:
         run: docker stop webapp
 
       # --- Despliegue Final en Heroku ---
-      - name: Deploy to Heroku
+      - name: Heroku login and deploy
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
@@ -100,3 +100,5 @@ jobs:
           heroku_email: "fb.bonnin@gmail.com"
           remote_branch: "master"
           usedocker: true
+          # Forzamos el login de docker con Heroku explícitamente antes del despliegue.
+          docker_login: true
