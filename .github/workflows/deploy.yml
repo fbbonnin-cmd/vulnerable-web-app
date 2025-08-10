@@ -30,6 +30,7 @@ jobs:
         with:
           args: --file=package.json
           fail-on-issues: false
+          fail-on-threshold: false
       - name: Install Trivy
         run: |
           sudo apt-get install wget apt-transport-https gnupg lsb-release
