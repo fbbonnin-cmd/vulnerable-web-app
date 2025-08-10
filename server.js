@@ -1,4 +1,4 @@
-//Packages we are using
+    //Packages we are using
 var express = require('express'),
     app = express(),
     request = require('request'),
@@ -43,7 +43,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', '.html');
 
 //Run the server
-app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 3000);
 
 // console.log(`Example app listening on http://${HOST}:${PORT} or http://localhost:${PORT} !`);
 
