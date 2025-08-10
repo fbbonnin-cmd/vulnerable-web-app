@@ -27,7 +27,8 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io
 
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@v1 # Corregido a la acción de Node.js
+        # Usamos el commit hash para asegurar que la acción se encuentre
+        uses: snyk/actions/node@e37340e4f3a778c18731d148e1a12028682a3928
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
@@ -52,7 +53,8 @@ jobs:
         run: docker run -d --rm --name webapp -p 8080:3000 vulnerable-web-app
 
       - name: ZAP Full Scan
-        uses: owasp-zap/zap-action@v2 # Corregido al nombre de acción oficial
+        # Usamos el commit hash para asegurar que la acción se encuentre
+        uses: owasp-zap/zap-action@21b369527f4284b3e6f9d768163f82f2549e37cf
         with:
           target: 'http://localhost:8080'
           zap_scan_type: 'full-scan'
@@ -77,3 +79,4 @@ jobs:
           heroku_email: "fb.bonnin@gmail.com"
           remote_branch: "master"
           usedocker: true
+
