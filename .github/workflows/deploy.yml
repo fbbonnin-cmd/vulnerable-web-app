@@ -94,7 +94,8 @@ jobs:
           echo "docker run --rm -v $(pwd)/arachni_report:/arachni/output arachni/arachni https://vulnerable-web-app-francisco-421135215dab.herokuapp.com/ --report-save-path=/arachni/output/report.afr --report-formats=html"
 
       - name: Arachni Full Scan
-        run: docker run --rm -v $(pwd)/arachni_report:/arachni/output arachni/arachni sh -c "bin/arachni https://vulnerable-web-app-francisco-421135215dab.herokuapp.com/ --report-save-path=/arachni/output/report.afr --report-formats=html"
+        # Comando corregido para usar una sintaxis más simple y robusta
+        run: docker run --rm -v $(pwd)/arachni_report:/arachni/output arachni/arachni https://vulnerable-web-app-francisco-421135215dab.herokuapp.com/ --report-save-path=/arachni/output/report.afr --report-formats=html
 
       - name: Publish Arachni Report
         uses: actions/upload-artifact@v4
