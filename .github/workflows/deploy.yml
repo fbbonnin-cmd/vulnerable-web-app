@@ -115,8 +115,7 @@ jobs:
         with:
           name: Combined-Reports
           path: reports.tar.gz
-
-deploy-heroku:
+  deploy-heroku:
     name: Deploy Heroku
     needs: build-and-scan
     runs-on: ubuntu-latest
@@ -133,4 +132,3 @@ deploy-heroku:
           heroku_app_name: "vulnerable-web-app-francisco"
           heroku_email: "fb.bonnin@gmail.com"
           usedocker: true
-      
