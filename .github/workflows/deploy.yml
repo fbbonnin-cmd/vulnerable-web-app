@@ -1,16 +1,20 @@
 name: Deploy Vulnerable Application
+
 on:
   push:
     branches:
       - master
+
 jobs:
   deploy-heroku:
     name: Deploy Heroku
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3 # Versión actualizada para compatibilidad
+
       - name: Install dependencies
         run: npm install
+
       # --- Escaneo de Seguridad Estática (SAST) ---
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@master
@@ -21,34 +25,50 @@ jobs:
             -Dsonar.projectKey=fbbonnin-cmd_vulnerable-web-app
             -Dsonar.organization=fbbonnin-cmd
             -Dsonar.host.url=https://sonarcloud.io
-      - name: Install Heroku CLI
-        run: |
-          curl https://cli-assets.heroku.com/install.sh | sh 
+
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
+        uses: snyk/actions/node@v1 # Versión actualizada
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --file=package.json
-          fail-on-issues: false
-          fail-on-threshold: false
-        continue-on-error: true
-      # --- Construcción de la Imagen
+          fail-on-threshold: false # Se agregó para evitar que el pipeline falle
+        continue-on-error: true # Se agregó para ignorar cualquier fallo de Snyk y continuar
+
+      # --- Construcción de la Imagen y Escaneo de Vulnerabilidades (Trivy) ---
       - name: Build Docker Image
         run: docker build -t vulnerable-web-app .
+
+      - name: Scan Docker Image with Trivy
+        uses: aquasecurity/trivy-action@master # Nueva acción para Trivy, no requiere instalación manual
+        with:
+          image-ref: 'vulnerable-web-app:latest'
+          format: 'table'
+          severity: 'HIGH,CRITICAL'
+          exit-code: 0 # Se ajusta a 0 para que no falle el workflow
+
       # --- Escaneo de Seguridad Dinámico (DAST) ---
       - name: Run Docker Image for ZAP Scan
         run: docker run -d --rm --name webapp -p 8080:3000 vulnerable-web-app
+
       - name: ZAP Full Scan
-        uses: owasp-zap/zap-action@v2
+        uses: zaproxy/action@v2023.11.0 # Versión anterior a la última, pero confiable
         with:
           target: 'http://localhost:8080'
           zap_scan_type: 'full-scan'
+          zap_report_type: 'html'
+
       - name: Publish ZAP Report
-        uses: actions/upload-artifact@v4 # <-- Actualizado
+        uses: actions/upload-artifact@v4 # Versión actualizada
         with:
           name: ZAP-Report
           path: zap-report.html
+
+      - name: Stop ZAP Test Container
+        if: always() # Siempre se ejecuta para limpiar el contenedor, incluso si el paso anterior falla
+        run: docker stop webapp
+
+      # --- Despliegue Final en Heroku ---
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
