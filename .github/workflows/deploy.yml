@@ -52,7 +52,20 @@ jobs:
       - name: Run Docker Image for ZAP Scan
         run: docker run -d --rm --name webapp -p 8080:3000 vulnerable-web-app
       - name: Wait for application to start
-        run: sleep 15
+        run: |
+          echo "Waiting for app to be ready on http://localhost:8080..."
+          MAX_RETRIES=20
+          RETRY_COUNT=0
+          while ! curl --silent --fail http://localhost:8080; do
+            echo "App is not ready yet. Waiting 5 seconds..."
+            sleep 5
+            RETRY_COUNT=$((RETRY_COUNT+1))
+            if [ $RETRY_COUNT -ge $MAX_RETRIES ]; then
+              echo "Timeout: App did not start within the expected time."
+              exit 1
+            fi
+          done
+          echo "App is ready. Starting ZAP scan."
       - name: ZAP Full Scan
         uses: zaproxy/action-full-scan@v0.12.0
         with:
