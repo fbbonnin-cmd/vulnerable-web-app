@@ -98,7 +98,7 @@ jobs:
         run: |
           ./arachni_bin/bin/arachni https://vulnerable-web-app-francisco-421135215dab.herokuapp.com/ \
             --report-save-path=arachni_report/report.afr \
-            --report-formats=html
+            -r html
             
       - name: Publish Arachni Report
         uses: actions/upload-artifact@v4
