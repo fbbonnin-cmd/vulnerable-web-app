@@ -11,6 +11,15 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: npm install
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectKey: tu-llave-de-proyecto-en-sonarcloud
+          args: >
+            -Dsonar.organization=tu-organizacion-en-sonarcloud
+            -Dsonar.host.url=https://sonarcloud.io
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
@@ -36,6 +45,9 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "vulnerable-web-app-francisco"
+          heroku_email: "fb.bonnin@gmail.com"
+          remote_branch: "master"
+          usedocker: true
           heroku_email: "fb.bonnin@gmail.com"
           remote_branch: "master"
           usedocker: true
