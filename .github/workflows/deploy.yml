@@ -88,19 +88,16 @@ jobs:
           path: report_html.html
 
       # --- Escaneo de Seguridad Dinámico con Arachni ---
-      - name: Debug Arachni Command
-        run: |
-          echo "Ejecutando el siguiente comando:"
-          echo "docker run --rm -v $(pwd)/arachni_report:/arachni/output arachni/arachni https://vulnerable-web-app-francisco-421135215dab.herokuapp.com/ --report-save-path=/arachni/output/report.afr --report-formats=html"
-
       - name: Arachni Full Scan
         run: |
           mkdir -p arachni_report
           docker run --rm \
             -v "$(pwd)/arachni_report:/arachni/output" \
             arachni/arachni \
-            sh -c 'arachni https://vulnerable-web-app-francisco-421135215dab.herokuapp.com/ --report-save-path=/arachni/output/report.afr --report-formats=html'
-
+            sh -c "/arachni/bin/arachni https://vulnerable-web-app-francisco-421135215dab.herokuapp.com/ \
+              --report-save-path=/arachni/output/report.afr \
+              --report-formats=html"
+              
       - name: Publish Arachni Report
         uses: actions/upload-artifact@v4
         with:
