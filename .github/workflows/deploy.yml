@@ -87,6 +87,17 @@ jobs:
           name: ZAP-Report
           path: report_html.html
 
+      # --- Escaneo de Seguridad Dinámico con Arachni ---
+      - name: Arachni Full Scan
+        run: docker run --rm -v $(pwd)/arachni_report:/arachni/output arachni/arachni --report-save-path=/arachni/output/report.afr --report-formats=html https://vulnerable-web-app-francisco-421135215dab.herokuapp.com/
+
+      - name: Publish Arachni Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Arachni-Report
+          path: arachni_report/report.html
+
+
       - name: Stop ZAP Test Container
         if: always()
         run: docker stop webapp
