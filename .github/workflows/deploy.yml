@@ -53,8 +53,7 @@ jobs:
         run: docker run -d --rm --name webapp -p 8080:3000 vulnerable-web-app
 
       - name: ZAP Full Scan
-        # Usamos un commit hash estable para evitar el error de "action not found"
-        uses: zaproxy/action-full-scan@897c8d9c223c3b0387a26f8d166822557e1b59c4
+        uses: zaproxy/action-full-scan@v0.12.0
         with:
           target: 'http://localhost:8080'
           zap_scan_type: 'full-scan'
