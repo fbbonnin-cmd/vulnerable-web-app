@@ -27,13 +27,13 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io
 
       - name: Run Snyk to check for vulnerabilities
-        # Se actualiza a la versión completa v1.0.0 para mayor estabilidad
-        uses: snyk/actions/node@v1.0.0
+        # Se restaura a la versión original que funcionaba correctamente
+        uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --file=package.json
-          fail-on-threshold: false
+          fail-on-issues: false
         continue-on-error: true
 
       # --- Construcción de la Imagen y Escaneo de Vulnerabilidades (Trivy) ---
@@ -53,8 +53,8 @@ jobs:
         run: docker run -d --rm --name webapp -p 8080:3000 vulnerable-web-app
 
       - name: ZAP Full Scan
-        # Se actualiza a la versión completa v2.1.0 para mayor estabilidad
-        uses: owasp-zap/zap-action@v2.1.0
+        # Usamos un commit hash estable para evitar el error de "action not found"
+        uses: zaproxy/action-full-scan@897c8d9c223c3b0387a26f8d166822557e1b59c4
         with:
           target: 'http://localhost:8080'
           zap_scan_type: 'full-scan'
