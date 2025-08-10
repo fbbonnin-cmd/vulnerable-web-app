@@ -92,13 +92,15 @@ jobs:
         run: docker stop webapp
 
       # --- Despliegue Final en Heroku ---
-      - name: Heroku login and deploy
+      - name: Install Heroku CLI
+        # Agregamos este paso para asegurar que la CLI de Heroku esté instalada
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "vulnerable-web-app-francisco"
           heroku_email: "fb.bonnin@gmail.com"
-          remote_branch: "master"
           usedocker: true
-          # Forzamos el login de docker con Heroku explícitamente antes del despliegue.
-          docker_login: true
+
