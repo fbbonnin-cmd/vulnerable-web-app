@@ -51,6 +51,13 @@ jobs:
       # --- Escaneo de Seguridad Dinámico (DAST) ---
       - name: Run Docker Image for ZAP Scan
         run: docker run -d --rm --name webapp -p 8080:3000 vulnerable-web-app
+      - name: Debug Docker Container
+        run: |
+          echo "Inspecting running containers..."
+          docker ps
+          echo "---"
+          echo "Fetching logs from 'webapp' container..."
+          docker logs webapp
       - name: Wait for application to start
         run: |
           echo "Waiting for app to be ready on http://localhost:8080..."
