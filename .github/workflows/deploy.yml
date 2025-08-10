@@ -74,11 +74,14 @@ jobs:
           done
           echo "App is ready. Starting ZAP scan."
       - name: ZAP Full Scan
+        # Eliminamos el token para evitar el error de creación de issues.
         uses: zaproxy/action-full-scan@v0.12.0
         with:
           target: 'http://localhost:8080'
-          zap_scan_type: 'full-scan'
-          zap_report_type: 'html'
+          # Añadimos la opción para que ZAP genere un reporte HTML en un archivo.
+          cmd_options: '-r zap-report.html'
+          # Deshabilitamos la escritura de issues para evitar el error.
+          allow_issue_writing: false
 
       - name: Publish ZAP Report
         uses: actions/upload-artifact@v4
