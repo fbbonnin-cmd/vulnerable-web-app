@@ -17,8 +17,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=tu-llave-de-proyecto-en-sonarcloud
-            -Dsonar.organization=tu-organizacion-en-sonarcloud
+            -Dsonar.projectKey=fbbonnin-cmd
+            -Dsonar.organization=Francisco
             -Dsonar.host.url=https://sonarcloud.io
       - name: Install Heroku CLI
         run: |
