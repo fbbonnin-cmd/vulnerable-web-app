@@ -23,6 +23,13 @@ jobs:
       - name: Install Heroku CLI
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
+      - name: Snyk Fix Vulnerabilities
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: fix
+          args: --file=package.json --all  
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/node@master
         env:
