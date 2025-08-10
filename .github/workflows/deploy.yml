@@ -48,6 +48,3 @@ jobs:
           heroku_email: "fb.bonnin@gmail.com"
           remote_branch: "master"
           usedocker: true
-          heroku_email: "fb.bonnin@gmail.com"
-          remote_branch: "master"
-          usedocker: true
